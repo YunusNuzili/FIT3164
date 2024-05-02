@@ -79,7 +79,7 @@ def fit_polynomial_model(df):
     model.fit(X_train_poly, y_train)
 
     # Assuming X_new contains new data points for price_change
-    X_new = np.arange(0,101).reshape(-1, 1)  # Example new data
+    X_new = np.arange(X_test)  # Example new data
     # Predict sales change
 
     X_new_poly = poly_features.transform(X_test)
@@ -95,7 +95,7 @@ def fit_polynomial_model(df):
 
     # Plot actual vs predicted sales change
     plt.scatter(X_train, y_train, color='blue', label='Actual Sales Change')
-    plt.plot(X_test, y_pred, color='red', label='Predicted Sales Change')
+    plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
     plt.xlabel('Price Change')
     plt.ylabel('Sales Change')
     dep = df['dept_id'].unique()

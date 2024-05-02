@@ -14,8 +14,38 @@ def optimise_price(item_id, store_id, target_sales, target_sales_date, current_d
     base_price1 =  base_price(df, item_id, store_id)
     base_demand1 = base_demand(df, item_id, store_id)
 
-    sales_change = identify_level(df, item_id, store_id, target_sales, year, 30)
+    sales_change = identify_level(df, item_id, store_id, target_sales, year, 30)[0]
     print(sales_change)
+
+    # Initial settings
+    max_iterations = 100
+    tolerance = 100  # Adjust this based on the acceptable error in target sales
+    learning_rate = 0.01  # This should be fine-tuned based on the responsiveness of the model
+
+    current_price = base_price1
+    current_demand = base_demand1
+
+    for _ in range(max_iterations):
+        # Calculate price change percentage
+        price_change_percentage = (current_price - base_price) / base_price * 100
+        # Predict the percentage change in sales
+        predicted_sales_change_percentage = identify_level(df, item_id, store_id, current_demand, year, price_change_percentage)
+        # Calculate predicted sales
+        predicted_sales = current_demand * (1 + predicted_sales_change_percentage / 100)
+
+        # Check if the predicted sales are within tolerance of the target sales
+        if abs(predicted_sales - target_sales) <= tolerance:
+            print(f"Optimal price found: ${current_price} with predicted sales of {predicted_sales}")
+            return current_price
+        # Update current demand for the next iteration based on predicted sales
+        current_demand = predicted_sales
+        # Adjust the price based on the error
+        error = predicted_sales - target_sales
+        current_price -= learning_rate * error  # Adjust the price accordingly
+
+    print("Max iterations reached without finding optimal price.")
+    return current_price
+
         
 
 def base_price(df, item_id, store):
@@ -138,9 +168,7 @@ def fit_polynomial_model(df, price_change):
     plt.show()
 
     price_change_new = np.array([[price_change]])
-    print(price_change_new)
     price_change_new_poly = poly_features.transform(price_change_new)
-    print(price_change_new_poly)
     return model.predict(price_change_new_poly)
 
 
