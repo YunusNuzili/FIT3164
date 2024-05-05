@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEAM 10</title>
+    <title>Pricing Optimisation and Analysis Team 10</title>
     <!-- CSS file -->
     <link rel="stylesheet" type="text/css" href="styles.css" media="all">
-
 </head>
 <body onload="showSection('home')">
     <header>
-        <h1>TEAM 10</h1>
+        <h1>Pricing Optimisation and Analysis Team 10</h1>
         <nav>
             <ul>
                 <li><a href="#home" onclick="showSection('home')">Home</a></li>
@@ -19,13 +18,12 @@
                 <li><a href="#contact" onclick="showSection('contact')">Contact</a></li>
             </ul>
         </nav>
-        <button class="button">GET STSARTED</button>
     </header>
 
     <section id="home">
         <h2>Quickly and automatically adjust pricing for retail items</h2>
         <p>Based on past product information and sales, we can make data visualization charts about price elasticity to help designate optimal pricing plans.</p>
-        <button onclick="customizeNow()">GET STARTED</button>
+        <button class="button" onclick="showSection('services')">GET STARTED</button>
     </section>
 
     <section id="about" style="display: none;">
@@ -34,7 +32,26 @@
     </section>
 
     <section id="services" style="display: none;">
-        <!-- Services section content -->
+        <h2>Our Services</h2>
+        <p>Enter information to filter.</p>
+        
+        <!-- Sales Quantity Input -->
+        <label for="salesQuantity">Sales Quantity:</label>
+        <input type="text" id="salesQuantity" name="salesQuantity">
+
+        <!-- Number of Days Input -->
+        <label for="numberOfDays">Number of Days:</label>
+        <input type="text" id="numberOfDays" name="numberOfDays">
+
+        <!-- Submit Button -->
+        <button onclick="submitForm()">Submit</button>
+
+        <!-- Result Section (Initially Hidden) -->
+        <div id="resultSection" style="display: none;">
+            <h2>Result</h2>
+            <div id="visualization"></div>
+            <p id="suggestion"></p>
+        </div>
     </section>
 
     <section id="contact" style="display: none;">
@@ -55,14 +72,38 @@
 
             // 显示对应的section
             var sectionToShow = document.getElementById(sectionId);
-            sectionToShow.style.display = 'block';
+            if(sectionToShow) {
+                sectionToShow.style.display = 'block';
+            }
         }
 
-        
-        function customizeNow() {
-            // 这里可以添加按钮点击后的操作，比如跳转到另一个页面或显示一个弹窗等
-            alert("Customize now button clicked!");
+        function submitForm() {
+            // 获取输入框中的值
+            var salesQuantity = document.getElementById("salesQuantity").value;
+            var numberOfDays = document.getElementById("numberOfDays").value;
+            
+            // 检查输入值是否有效
+            if (salesQuantity === "" || numberOfDays === "" || salesQuantity < 1 || numberOfDays < 1) {
+                alert("Please enter a valid value for sales quantity and number of days.");
+                return; // 如果输入值无效，不继续执行后续代码
+            }
+            
+            // 显示结果部分
+            var resultSection = document.getElementById("resultSection");
+            resultSection.style.display = "block";
+            
+            // 显示数据可视化（这里仅示例，你可以使用任何数据可视化库来展示数据）
+            var visualization = document.getElementById("visualization");
+            visualization.innerHTML = "Data visualization goes here.";
+    
+            // 根据输入的值生成建议信息
+            var suggestion = "Based on sales quantity of " + salesQuantity + " and " + numberOfDays + " days, we suggest...";
+            
+            // 显示建议信息
+            var suggestionElement = document.getElementById("suggestion");
+            suggestionElement.textContent = suggestion;
         }
+        
     </script>
 </body>
 </html>
