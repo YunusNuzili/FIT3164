@@ -64,13 +64,13 @@
 
     <script>
         function showSection(sectionId) {
-            // 隐藏所有section
+            // hide all section
             var sections = document.querySelectorAll('section');
             sections.forEach(function(section) {
                 section.style.display = 'none';
             });
 
-            // 显示对应的section
+            // show all section
             var sectionToShow = document.getElementById(sectionId);
             if(sectionToShow) {
                 sectionToShow.style.display = 'block';
@@ -78,28 +78,28 @@
         }
 
         function submitForm() {
-            // 获取输入框中的值
+            // get input value
             var salesQuantity = document.getElementById("salesQuantity").value;
             var numberOfDays = document.getElementById("numberOfDays").value;
             
-            // 检查输入值是否有效
+            // check if the value is valid
             if (salesQuantity === "" || numberOfDays === "" || salesQuantity < 1 || numberOfDays < 1) {
                 alert("Please enter a valid value for sales quantity and number of days.");
-                return; // 如果输入值无效，不继续执行后续代码
+                return; // if invalid stop
             }
             
-            // 显示结果部分
+            // show result page
             var resultSection = document.getElementById("resultSection");
             resultSection.style.display = "block";
             
-            // 显示数据可视化（这里仅示例，你可以使用任何数据可视化库来展示数据）
+            // show visuallization graph
             var visualization = document.getElementById("visualization");
             visualization.innerHTML = "Data visualization goes here.";
     
-            // 根据输入的值生成建议信息
+            // generate suggestion
             var suggestion = "Based on sales quantity of " + salesQuantity + " and " + numberOfDays + " days, we suggest...";
             
-            // 显示建议信息
+            // show suggestion
             var suggestionElement = document.getElementById("suggestion");
             suggestionElement.textContent = suggestion;
         }
