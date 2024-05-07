@@ -6,7 +6,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-
+#test
 
 def identify_level(item_id, store, sales, year, target_sales_date):
     file_name = f"percentage_changes_decr_price/{year-1}_percentage_changes.csv"
