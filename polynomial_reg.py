@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from datetime import datetime
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
@@ -11,42 +12,92 @@ def optimise_price(item_id, store_id, target_sales, target_sales_date, current_d
 
     df = pd.read_csv(file_name)
 
-    base_price1 =  base_price(df, item_id, store_id)
-    base_demand1 = base_demand(df, item_id, store_id)
+    # Get base price and average weekly demand at that price
+    base_price = get_base_price_and_demand(df, item_id, store_id)[0]
+    base_weekly_demand = get_base_price_and_demand(df, item_id, store_id)[1]
 
-    sales_change = identify_level(df, item_id, store_id, target_sales, year, 30)[0]
-    print(sales_change)
+    if base_weekly_demand < 1:
+        base_weekly_demand = 1
+    
+    # Convert date strings to datetime objects
+    date_format = "%d/%m/%Y"
+    date1 = datetime.strptime(current_date, date_format)
+    date2 = datetime.strptime(target_sales_date, date_format)
+    
+    # Calculate the difference between the dates
+    delta = date2 - date1
+    
+    # Extract the number of days from the timedelta object
+    num_weeks = delta.days//7
 
     # Initial settings
     max_iterations = 100
-    tolerance = 100  # Adjust this based on the acceptable error in target sales
-    learning_rate = 0.01  # This should be fine-tuned based on the responsiveness of the model
+    tolerance = 1  # This is now used to stop further adjustments when profit change is minimal
+    margin = 0.05
+    cost_price = base_price * (1 - margin)
+    learning_rate = 0.01  # This should be fine-tuned based on responsiveness
 
-    current_price = base_price1
-    current_demand = base_demand1
+    current_price = base_price
+    current_demand = base_weekly_demand
+    best_profit = 0
+    best_price = base_price
+    temp = [1, 2, 3]
+    price_change_percentage1 = 0
 
-    for _ in range(max_iterations):
-        # Calculate price change percentage
-        price_change_percentage = (current_price - base_price) / base_price * 100
-        # Predict the percentage change in sales
+    for i in range(1, max_iterations):
+        price_change_percentage = i
+        current_price = base_price - ((price_change_percentage*base_price)/100)
         predicted_sales_change_percentage = identify_level(df, item_id, store_id, current_demand, year, price_change_percentage)
-        # Calculate predicted sales
-        predicted_sales = current_demand * (1 + predicted_sales_change_percentage / 100)
+        predicted_sales = num_weeks * (base_weekly_demand * (1 + predicted_sales_change_percentage / 100))
+        if i == 22:
+            temp[0] = (current_price - cost_price) * predicted_sales
+            temp[1] = predicted_sales
+            temp[2] = current_price
 
-        # Check if the predicted sales are within tolerance of the target sales
-        if abs(predicted_sales - target_sales) <= tolerance:
-            print(f"Optimal price found: ${current_price} with predicted sales of {predicted_sales}")
-            return current_price
-        # Update current demand for the next iteration based on predicted sales
-        current_demand = predicted_sales
-        # Adjust the price based on the error
-        error = predicted_sales - target_sales
-        current_price -= learning_rate * error  # Adjust the price accordingly
-
-    print("Max iterations reached without finding optimal price.")
-    return current_price
+        # Calculate profit and check against the best seen so far
+        if predicted_sales < 200:
+            profit = (current_price - cost_price) * predicted_sales  # Ensure we do not exceed stock
+            if profit > best_profit:
+                best_profit = profit
+                best_price = current_price
+                price_change_percentage1 = price_change_percentage
+    
+    print(temp)
+    print(best_price, price_change_percentage1, best_profit)
+    return best_price
 
         
+
+def get_base_price_and_demand(df, item_id, store):
+    dept_id = item_id[:-4]
+    selected_df = None
+
+    # Prioritize data specificity from most specific (item and store match) to least specific (department level)
+    if not df[(df['item_id'] == item_id) & (df['store_id'] == store)].empty:
+        selected_df = df[(df['item_id'] == item_id) & (df['store_id'] == store)]
+    elif not df[df['item_id'] == item_id].empty:
+        selected_df = df[df['item_id'] == item_id]
+    elif not df[(df['dept_id'] == dept_id) & (df['store_id'] == store)].empty:
+        selected_df = df[(df['dept_id'] == dept_id) & (df['store_id'] == store)]
+    elif not df[df['dept_id'] == dept_id].empty:
+        selected_df = df[df['dept_id'] == dept_id]
+
+    if selected_df is not None:
+        # Calculate the base price as the maximum price observed
+        base_price = max(selected_df['sell_price'])
+        # Filter the DataFrame to rows with this base price
+        base_price_df = selected_df[selected_df['sell_price'] == base_price]
+        # Calculate the average weekly demand (sales) at this base price
+        if not base_price_df.empty:
+            average_demand = base_price_df['sales'].mean()
+            return base_price, average_demand
+        else:
+            # In case there's no sales data at the base price, fall back to overall average
+            average_demand = selected_df['sales'].mean()
+            return base_price, average_demand
+
+    # Fallback if no relevant data found; perhaps raise an error or return a default
+    return None, None
 
 def base_price(df, item_id, store):
     dept_id = item_id[:-4]
@@ -153,23 +204,23 @@ def fit_polynomial_model(df, price_change):
     # Transform new data using polynomial features
 
     y_pred = model.predict(X_new_poly)
-    print(y_pred)
+    #print(y_pred)
 
     # Plot actual vs predicted sales change
-    plt.scatter(X, y, color='blue', label='Actual Sales Change')
-    plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
-    plt.xlabel('Price Change')
-    plt.ylabel('Sales Change')
+    #plt.scatter(X, y, color='blue', label='Actual Sales Change')
+    #plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
+    #plt.xlabel('Price Change')
+    #plt.ylabel('Sales Change')
     dep = df['dept_id'].unique()
-    plt.title(f'Price Elasticity for {dep}')
-    plt.legend()
-    plt.grid(True)
+    #plt.title(f'Price Elasticity for {dep}')
+    #plt.legend()
+    #plt.grid(True)
 
-    plt.show()
+    #plt.show()
 
     price_change_new = np.array([[price_change]])
     price_change_new_poly = poly_features.transform(price_change_new)
     return model.predict(price_change_new_poly)
 
 
-optimise_price('HOBBIES_1_002', 'CA_1', 500000, '12/08/2014', '02/06/2014', 2014)
+optimise_price('HOUSEHOLD_1_001', 'CA_1', 500000, '12/08/2014', '02/06/2014', 2014)
