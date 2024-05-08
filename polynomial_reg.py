@@ -40,8 +40,9 @@ def optimise_price(item_id, store_id, target_sales, target_sales_date, current_d
     current_price = base_price
     current_demand = base_weekly_demand
     best_profit = 0
+    best_loss = float("-inf")
     best_price = base_price
-    temp = [1, 2, 3]
+    temp = [1, 2, 3, 4]
     price_change_percentage1 = 0
 
     for i in range(1, max_iterations):
@@ -49,21 +50,27 @@ def optimise_price(item_id, store_id, target_sales, target_sales_date, current_d
         current_price = base_price - ((price_change_percentage*base_price)/100)
         predicted_sales_change_percentage = identify_level(df, item_id, store_id, current_demand, year, price_change_percentage)
         predicted_sales = num_weeks * (base_weekly_demand * (1 + predicted_sales_change_percentage / 100))
-        if i == 22:
+        if i == 81:
             temp[0] = (current_price - cost_price) * predicted_sales
             temp[1] = predicted_sales
             temp[2] = current_price
+            temp[3] = predicted_sales_change_percentage
 
         # Calculate profit and check against the best seen so far
         if predicted_sales < 200:
             profit = (current_price - cost_price) * predicted_sales  # Ensure we do not exceed stock
-            if profit > best_profit:
+            if (profit <  0) and (profit > best_loss):
+                best_loss = profit
+                best_price = current_price
+                price_change_percentage1 = price_change_percentage
+            elif profit > best_profit:
                 best_profit = profit
                 best_price = current_price
                 price_change_percentage1 = price_change_percentage
     
     print(temp)
-    print(best_price, price_change_percentage1, best_profit)
+    print(best_price, price_change_percentage1, best_profit, best_loss)
+    print(base_price, cost_price, base_weekly_demand)
     return best_price
 
         
@@ -207,20 +214,26 @@ def fit_polynomial_model(df, price_change):
     #print(y_pred)
 
     # Plot actual vs predicted sales change
-    #plt.scatter(X, y, color='blue', label='Actual Sales Change')
-    #plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
-    #plt.xlabel('Price Change')
-    #plt.ylabel('Sales Change')
-    dep = df['dept_id'].unique()
-    #plt.title(f'Price Elasticity for {dep}')
-    #plt.legend()
-    #plt.grid(True)
+    # plt.scatter(X, y, color='blue', label='Actual Sales Change')
+    # plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
+    # plt.xlabel('Price Change')
+    # plt.ylabel('Sales Change')
+    # dep = df['dept_id'].unique()
+    # plt.title(f'Price Elasticity for {dep}')
+    # plt.legend()
+    # plt.grid(True)
 
-    #plt.show()
+    # plt.show()
 
     price_change_new = np.array([[price_change]])
     price_change_new_poly = poly_features.transform(price_change_new)
     return model.predict(price_change_new_poly)
 
 
-optimise_price('HOUSEHOLD_1_001', 'CA_1', 500000, '12/08/2014', '02/06/2014', 2014)
+print(optimise_price('HOBBIES_1_028', 'TX_1', 500000, '12/11/2014', '02/06/2014', 2012))
+
+# file_name = f"percentage_changes_decr_price/{2014-1}_percentage_changes.csv"
+
+# df = pd.read_csv(file_name)
+
+# identify_level(df,'FOODS_3_050', 'TX_1', 500000, 2014, 98)
