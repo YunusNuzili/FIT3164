@@ -30,26 +30,26 @@ def identify_level(item_id, store, sales, year, target_sales_date):
 
 
 def item_level_model(item_id, store, sales, year, target_sales_date, df):
-    df = df[df['item_id'] == item_id]
-    df['price_change'] = df['price_change'].abs()
-    fit_polynomial_model(df)
+    df_filtered = df[df['item_id'] == item_id]
+    df_filtered['price_change'] = df_filtered['price_change'].abs()
+    fit_polynomial_model(df_filtered)
 
 def item_store_level_model(item_id, store, sales, year, target_sales_date, df):
-    df = df[(df['item_id'] == item_id) & (df['store_id'] == store)]
-    df['price_change'] = df['price_change'].abs()
-    fit_polynomial_model(df)
+    df_filtered = df[(df['item_id'] == item_id) & (df['store_id'] == store)]
+    df_filtered['price_change'] = df_filtered['price_change'].abs()
+    fit_polynomial_model(df_filtered)
 
 def department_level_model(item_id, store, sales, year, target_sales_date, df):
     dept_id = item_id[:-4]
-    df = df[df['dept_id'] == dept_id]
-    df['price_change'] = df['price_change'].abs()
-    fit_polynomial_model(df)
+    df_filtered = df[df['dept_id'] == dept_id]
+    df_filtered['price_change'] = df_filtered['price_change'].abs()
+    fit_polynomial_model(df_filtered)
 
 def department_store_level_model(item_id, store, sales, year, target_sales_date, df):
     dept_id = item_id[:-4]
-    df = df[(df['dept_id'] == dept_id) & (df['store_id'] == store)]
-    df['price_change'] = df['price_change'].abs()
-    fit_polynomial_model(df)
+    df_filtered = df[(df['dept_id'] == dept_id) & (df['store_id'] == store)]
+    df_filtered['price_change'] = df_filtered['price_change'].abs()
+    fit_polynomial_model(df_filtered)
 
 
 def fit_polynomial_model(df):
@@ -79,7 +79,7 @@ def fit_polynomial_model(df):
     model.fit(X_train_poly, y_train)
 
     # Assuming X_new contains new data points for price_change
-    X_new = np.arange(X_test)  # Example new data
+
     # Predict sales change
 
     X_new_poly = poly_features.transform(X_test)
@@ -88,14 +88,16 @@ def fit_polynomial_model(df):
     y_pred = model.predict(X_new_poly)
 
     mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
     mae = mean_absolute_error(y_test, y_pred)
 
     print("Mean Squared Error:", mse)
     print("Mean Absolute Error:", mae)
+    print("Root Mean Square Error (RMSE):", rmse)
 
     # Plot actual vs predicted sales change
     plt.scatter(X_train, y_train, color='blue', label='Actual Sales Change')
-    plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
+    plt.plot(X_test, y_pred, color='red', label='Predicted Sales Change')
     plt.xlabel('Price Change')
     plt.ylabel('Sales Change')
     dep = df['dept_id'].unique()

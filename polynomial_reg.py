@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import make_pipeline
 
 
-def optimise_price(item_id, store_id, target_sales, target_sales_date, current_date, year):
+def optimise_price(item_id, store_id, target_sales_date, current_date, year):
     file_name = f"percentage_changes_decr_price/{year-1}_percentage_changes.csv"
 
     df = pd.read_csv(file_name)
@@ -230,7 +230,7 @@ def fit_polynomial_model(df, price_change):
     return model.predict(price_change_new_poly)
 
 
-optimise_price('HOBBIES_1_028', 'TX_1', 500000, '12/11/2014', '02/06/2014', 2012)
+optimise_price('HOBBIES_1_028', 'TX_1', '12/11/2014', '02/06/2014', 2012)
 
 # file_name = f"percentage_changes_decr_price/{2014-1}_percentage_changes.csv"
 
