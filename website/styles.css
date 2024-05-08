@@ -1,104 +1,109 @@
 /* styles.css */
 * {
-    box-sizing: border-box; /* 不超出屏幕 */
+    box-sizing: border-box; /* inside the screen */
 }
-/* 重置默认样式 */
+/* init style */
 body, h1, h2, p, ul, li {
     margin: 0;
     padding: 0;
 }
 
-/* 设置页面背景颜色和字体 */
+/* back color and picture */
 body {
-    font-family: Arial, sans-serif; /* 设置字体为 Arial 或者系统默认 sans-serif */
-    margin: 0 auto; /* 居中显示 */
-    background-image: url('1.jpg'); /* 设置背景图片 */
-    background-repeat: no-repeat; /* 不重复背景图片 */
-    background-size: cover; /* 调整背景图片大小以覆盖整个页面 */
+    font-family: Arial, sans-serif; 
+    margin: 0 auto; /* middle display */
+    background-image: url('1.jpg'); /* background picture */
+    background-repeat: no-repeat; /* no repeat picture */
+    background-size: cover; /* cover whole page */
 }
 
-/* 设置头部样式 */
+/* head style */
 header {
-    background-color: rgba(51, 51, 51, 0); /* 使用 RGBA 颜色表示法，设置初始背景颜色为透明 */
-    color: #fff; /* 设置文字颜色为白色 */
-    padding: 20px; /* 设置内边距为 20 像素 */
-    display: flex; /* 使用 flex 布局 */
-    justify-content: space-between; /* 将标题和导航菜单水平排列，两者之间的间距平均分配 */
-    align-items: center; /* 垂直方向居中对齐 */
-    width: 100%; /* 设置 header 宽度为浏览器窗口宽度 */
-    top: 0; /* 设置 header 距离浏览器窗口顶部的距离为 0 */    
+    background-color: rgba(51, 51, 51, 0); /* use RGBA color display method,set color as transparent */
+    color: #fff; 
+    padding: 20px; 
+    display: flex; /* use flex layout */
+    justify-content: space-between; /* horizontall */
+    align-items: center; /* middle display */
+    width: 100%; /* set same width */
+    top: 0;  
 }
 
 nav ul li {
-    display: inline; /* 设置列表项在一行内显示 */
-    margin-right: 20px; /* 设置列表项之间的右边距为 20 像素 */
+    display: inline; 
+    margin-right: 20px; 
 }
 
 nav ul li a {
-    color: #fff; /* 设置链接文字颜色为白色 */
-    text-decoration: none; /* 移除链接的下划线 */
-    font-weight: bold; /* 设置链接文字加粗 */
+    color: #fff; /* white color of word */
+    text-decoration: none; /* remove underline */
+    font-weight: bold; 
 
 }
 
 nav ul li a:hover {
-    text-decoration: underline; /* 鼠标悬停时显示链接的下划线 */
+    text-decoration: underline; /* show link underline */
 }
 
-/* 设置内容部分样式 */
+
 main {
-    margin: 20px; /* 设置外边距为 20 像素 */
+    margin: 20px; 
 }
 
 section {
-    background-color: transparent; /* 将文字部分的背景色设置为透明 */
-    padding: 20px; /* 设置内边距为 20 像素 */
-    margin-bottom: 40px; /* 设置部分之间的下边距为 40 像素 */
+    background-color: transparent; /* description background transparent */
+    padding: 20px; 
+    margin-bottom: 40px; 
 }
 
 section p {
-    margin-top: 40px; /* 增加段落顶部的外边距为20像素 */
-    margin-bottom: 60px; /* 设置段落底部的外边距为30像素 */
+    margin-top: 40px; 
+    margin-bottom: 60px; 
 }
 
 
 h2 {
-    color: #fff; /* 设置文字颜色为白色 */
-    font-size: 50px; /* 设置字体大小为36像素 */
-    margin-top: 80px; /* 将标题向下移动20像素 */
+    color: #fff; 
+    font-size: 50px; 
+    margin-top: 80px; 
 }
 
 p {
-    color: #fff; /* 设置文字颜色为白色 */
-    font-size: 24px; /* 设置字体大小为36像素 */
+    color: #fff; 
+    font-size: 24px; 
 }
 
-/* 设置页脚样式 */
+label {
+    color: #fff; 
+    font-size: 24px; 
+}
+
+/* footer style */
 footer {
-    background-color: rgba(51, 51, 51, 0); /* 使用 RGBA 颜色表示法，设置初始背景颜色为透明 */
-    color: #fff; /* 设置文字颜色为白色 */
-    padding: 20px; /* 设置内边距为 20 像素 */
-    text-align: center; /* 设置文字居中对齐 */
-    position: fixed; /* 将 footer 固定在浏览器窗口底部 */
-    width: 100%; /* 设置 footer 宽度为浏览器窗口宽度 */
-    bottom: 0; /* 设置 footer 距离浏览器窗口底部的距离为 0 */
+    background-color: rgba(51, 51, 51, 0); /* RBGA method */
+    color: #fff; 
+    padding: 20px; 
+    text-align: center; /* center aligned */
+    position: fixed; /* fix footer on bottom of the page */
+    width: 100%; /*  footer width = browser width */
+    bottom: 0; 
 }
 
-/* 按钮样式 */
+/* button style */
 button {
-    padding: 15px 30px; /* 设置按钮的内边距 */
-    background-color: #fff; /* 设置按钮的背景颜色为白色 */
-    border: 2px solid rgba(0, 0, 0, 0); /* 设置按钮的边框为透明 */
-    cursor: pointer; /* 设置鼠标悬停时的指针样式 */
-    font-weight: bold; /* 设置按钮文本加粗 */
-    font-family: Arial, sans-serif; /* 设置按钮文字的字体样式 */
-    padding: 18px 18px; /* 调整按钮的内边距，使长度变短一点，高度变大一点 */
-    letter-spacing: +1px; /* 调整字母间距，负值会使得字母更加接近 */
+    padding: 15px 30px; 
+    background-color: #fff; 
+    border: 2px solid rgba(0, 0, 0, 0); /* transparent box */
+    cursor: pointer; /* mouse style */
+    font-weight: bold; 
+    font-family: Arial, sans-serif; 
+    padding: 18px 18px; 
+    letter-spacing: +1px; /* letters space */
 
 }
 
 
-/* 按钮悬停样式 */
+/* hover style */
 button:hover {
-    background-color: #ddd; /* 设置按钮悬停时的背景颜色为浅灰色 */
+    background-color: #ddd; /* hover color */
 }
