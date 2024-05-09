@@ -106,14 +106,40 @@
             var itemId = document.getElementById("itemId").value;
             var storeId = document.getElementById("storeId").value;
             var targetSalesDate = document.getElementById("targetSalesDate").value;
+            var currentDate = document.getElementById("currentDate").value;
             var year = document.getElementById("year").value || ""; // Optional year, default to empty string if not provided
             
             // Check if the values are valid
             if (itemId === "" || storeId === "" || targetSalesDate === "" || itemId < 1 || storeId < 1) {
                 alert("Please enter a valid value for item ID and store ID.");
                 return; // if invalid, stop
-}
+            }
 
+            var formData = {
+                itemId: itemId,
+                storeId: storeId,
+                targetSalesDate: targetSalesDate,
+                currentDate: currentDate,
+                year: year
+            };
+
+            // Send an AJAX request to your Flask endpoint
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+
+        function displayResults(data) {
             
             // show result page
             var resultSection = document.getElementById("resultSection");
@@ -121,10 +147,10 @@
             
             // show visuallization graph
             var visualization = document.getElementById("visualization");
-            visualization.innerHTML = "Data visualization goes here.";
+            visualization.innerHTML = "Optimized Price: " + data.optimized_price;
     
             // generate suggestion
-            var suggestion = "Based on the input given we suggest...";
+            var suggestion = "Based on the input given we suggest..." + data.optimized_price;
             
             // show suggestion
             var suggestionElement = document.getElementById("suggestion");
