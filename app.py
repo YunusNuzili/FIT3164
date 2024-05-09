@@ -17,25 +17,13 @@ def predict():
         data = request.get_json()
         item_id = data['itemId']
         store_id = data['storeId']
+        sales = data.get('sales', 0)  # 默认销售量为0，如果没有提供
         target_sales_date = data['targetSalesDate']
         current_date = data.get('currentDate', '')
         year = int(data['year'])
-        model_type = data['modelType']
-        sales = data.get('sales', 0)
 
-        df_path = f"percentage_changes_decr_price/{year-1}_percentage_changes.csv"
-        try:
-            df = pd.read_csv(df_path)
-        except FileNotFoundError:
-            return jsonify({'error': f'File {df_path} not found'}), 404
-
-        if model_type == 'linear':
-            price_change = df['price_change']  
-            prediction = identify_level(item_id, store_id, sales, year, target_sales_date, df, price_change)
-        elif model_type == 'polynomial':
-            prediction = optimise_price(item_id, store_id, sales, target_sales_date, current_date, year)
-        else:
-            return jsonify({'error': 'Invalid model type'}), 400
+        # 调用 optimise_price 函数进行价格优化计算
+        prediction = optimise_price(item_id, store_id, sales, target_sales_date, current_date, year)
 
         return jsonify({'prediction': prediction})
     except Exception as e:
@@ -210,7 +198,6 @@ def fit_polynomial_model(df, price_change):
     price_change_new = np.array([[price_change]])
     price_change_new_poly = poly_features.transform(price_change_new)
     return model.predict(price_change_new_poly)
-
 
 
 
