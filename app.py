@@ -40,7 +40,7 @@ def optimise_price(item_id, store_id, target_sales_date, current_date, year):
     file_name = f"percentage_changes_decr_price/{year-1}_percentage_changes.csv"
 
     df = pd.read_csv(file_name)
-    
+
 
     # Get base price and average weekly demand at that price
     base_price = get_base_price_and_demand(df, item_id, store_id)[0]
