@@ -22,30 +22,49 @@
 
     <section id="home">
         <h2>Quickly and automatically adjust pricing for retail items</h2>
-        <p>Based on past product information and sales, we can make data visualization charts about price elasticity to help designate optimal pricing plans.</p>
+        <p>This web application is a price optimization system that can use historical sales data, product attributes and 
+            pricing information to determine the optimal pricing point and identify the relationship between price and sales 
+            demand. This will help retail businesses gain a competitive advantage and increase sales efficiency to make better 
+            decisions for higher profits</p>
         <button class="button" onclick="showSection('services')">GET STARTED</button>
     </section>
 
     <section id="about" style="display: none;">
         <h2>About Us</h2>
-        <p>We are team 10</p>      
-        <p>Yongkang Liu 30761840</p>
-        <p>Mohamed Yunus Nuzili 32795947</p>
-        <p>Brandon Yap 30884977</p>
-        <p>Yinghua Sun 28981510</p>
+        <p>We are team 10, below is all the members for our team.
+            <br>Yongkang Liu 30761840
+            <br>Mohamed Yunus Nuzili 32795947 
+            <br>Brandon Yap 30884977
+            <br>Yinghua Sun 28981510
+        </p>      
+        <p>This is Project 5, which is Pricing Optimization and Analysis. This project aims to optimize pricing strategies for 
+            retail products. In some retail sectors, the old methods of forecasting sales just do not work anymore. In the market 
+            today, we need an approach that precisely targets the improvement of pricing strategies to increase profit margins and 
+            market position.  This is all about how pricing changes can push sales and get more customers by using some high-level 
+            data analytics and model building. </p>
+
     </section>
 
     <section id="services" style="display: none;">
         <h2>Our Services</h2>
         <p>Enter information to filter.</p>
         
-        <!-- Sales Quantity Input -->
-        <label for="salesQuantity">Sales Quantity:</label>
-        <input type="text" id="salesQuantity" name="salesQuantity">
+        <!-- Item ID Input -->
+        <label for="itemId">Item ID:</label>
+        <input type="text" id="itemId" name="itemId">
 
-        <!-- Number of Days Input -->
-        <label for="numberOfDays">Number of Days:</label>
-        <input type="text" id="numberOfDays" name="numberOfDays">
+        <!-- Store ID Input -->
+        <label for="storeId">Store ID:</label>
+        <input type="text" id="storeId" name="storeId">
+
+        <!-- Target Sales Date Input -->
+        <label for="targetSalesDate">Target Sales Date:</label>
+        <input type="text" id="targetSalesDate" name="targetSalesDate">
+
+        <!-- Year Input (Optional) -->
+        <label for="year">Year (Optional):</label>
+        <input type="text" id="year" name="year">
+
 
         <!-- Submit Button -->
         <button onclick="submitForm()">Submit</button>
@@ -60,11 +79,11 @@
 
     <section id="contact" style="display: none;">
         <!-- Contact section content -->
-        <p>If you have any questions, please contact us via email</p>
-        <p>yliu0354@student.monash.edu</p>
-        <p>mnuz0001@student.monash.edu</p>
-        <p>byap0005@student.monash.edu</p>
-        <p>ysun0033@student.monash.edu</p>
+        <p>If you have any questions, please don't hesitate to contact us via email</p>
+        <br>yliu0354@student.monash.edu - Yong Kang
+        <br>mnuz0001@student.monash.edu - Yunus
+        <br>byap0005@student.monash.edu - Brandon
+        <br>ysun0033@student.monash.edu - Ying Hua
 
     </section>
 
@@ -88,15 +107,18 @@
         }
 
         function submitForm() {
-            // get input value
-            var salesQuantity = document.getElementById("salesQuantity").value;
-            var numberOfDays = document.getElementById("numberOfDays").value;
+            // Get input values
+            var itemId = document.getElementById("itemId").value;
+            var storeId = document.getElementById("storeId").value;
+            var targetSalesDate = document.getElementById("targetSalesDate").value;
+            var year = document.getElementById("year").value || ""; // Optional year, default to empty string if not provided
             
-            // check if the value is valid
-            if (salesQuantity === "" || numberOfDays === "" || salesQuantity < 1 || numberOfDays < 1) {
-                alert("Please enter a valid value for sales quantity and number of days.");
-                return; // if invalid stop
-            }
+            // Check if the values are valid
+            if (itemId === "" || storeId === "" || targetSalesDate === "" || itemId < 1 || storeId < 1) {
+                alert("Please enter a valid value for item ID and store ID.");
+                return; // if invalid, stop
+}
+
             
             // show result page
             var resultSection = document.getElementById("resultSection");
@@ -107,7 +129,7 @@
             visualization.innerHTML = "Data visualization goes here.";
     
             // generate suggestion
-            var suggestion = "Based on sales quantity of " + salesQuantity + " and " + numberOfDays + " days, we suggest...";
+            var suggestion = "Based on the input given we suggest...";
             
             // show suggestion
             var suggestionElement = document.getElementById("suggestion");
