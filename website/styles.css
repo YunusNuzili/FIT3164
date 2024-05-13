@@ -75,7 +75,7 @@ p {
 
 label {
     color: #fff; 
-    font-size: 50px; 
+    font-size: 24px; 
 }
 
 /* footer style */
@@ -106,6 +106,17 @@ button {
 /* hover style */
 button:hover {
     background-color: #ddd; /* hover color */
+    
+}
+
+
+/* Customize input fields */
+input[type="text"] {
+    font-size: 30px; /* Larger font size for readability */
+    height: 40px; /* Taller input fields */
+    width: 250px; /* Wider input fields */
+    padding: 5px; /* Padding inside the input fields for better text alignment */
+    margin: 10px 0; /* Adds space around the input fields */
 }
 
 input[type="text"]{
