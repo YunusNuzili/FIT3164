@@ -26,6 +26,11 @@ def predict():
 
         # 调用 optimise_price 函数进行价格优化计算
         prediction = optimise_price(item_id, store_id, target_sales_date, current_date, year)
+        plot = "/temp_plot.png"
+
+        
+        
+        
 
         optimal_price = str(round(prediction[0],2))
         print("Prediction:", optimal_price)
