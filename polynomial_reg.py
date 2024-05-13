@@ -212,18 +212,19 @@ def fit_polynomial_model(df, price_change):
 
     y_pred = model.predict(X_new_poly)
     #print(y_pred)
+    if price_change == 1:
+        # Plot actual vs predicted sales change
+        plt.scatter(X, y, color='blue', label='Actual Sales Change')
+        plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
+        plt.xlabel('Price Change')
+        plt.ylabel('Sales Change')
+        dep = df['dept_id'].unique()
+        plt.title(f'Price Elasticity for {dep}')
+        plt.legend()
+        plt.grid(True)
 
-    # Plot actual vs predicted sales change
-    # plt.scatter(X, y, color='blue', label='Actual Sales Change')
-    # plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
-    # plt.xlabel('Price Change')
-    # plt.ylabel('Sales Change')
-    # dep = df['dept_id'].unique()
-    # plt.title(f'Price Elasticity for {dep}')
-    # plt.legend()
-    # plt.grid(True)
+        plt.show()
 
-    # plt.show()
 
     price_change_new = np.array([[price_change]])
     price_change_new_poly = poly_features.transform(price_change_new)

@@ -27,7 +27,18 @@ def predict():
         # 调用 optimise_price 函数进行价格优化计算
         prediction = optimise_price(item_id, store_id, target_sales_date, current_date, year)
 
-        return jsonify({'optimized_price': prediction})
+        optimal_price = str(round(prediction[0],2))
+        print("Prediction:", optimal_price)
+        x_pred = [i for i in range(1, 101)]
+
+        y_pred = prediction[2].tolist()
+        print(prediction[2].tolist())
+        x_values = prediction[3].tolist()
+        y_values = prediction[4].tolist()
+        price_change_percentage = prediction[5]
+
+
+        return jsonify({'x_values': x_values, 'y_values': y_values, 'x_pred': x_pred, 'y_pred': y_pred,'optimized_price': optimal_price, "discount": price_change_percentage})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -62,10 +73,9 @@ def optimise_price(item_id, store_id, target_sales_date, current_date, year):
 
     # Initial settings
     max_iterations = 100
-    tolerance = 1  # This is now used to stop further adjustments when profit change is minimal
     margin = 0.05
+    # Cost price is generated with a 5% margin
     cost_price = base_price * (1 - margin)
-    learning_rate = 0.01  # This should be fine-tuned based on responsiveness
 
     current_price = base_price
     current_demand = base_weekly_demand
@@ -75,10 +85,20 @@ def optimise_price(item_id, store_id, target_sales_date, current_date, year):
     temp = [1, 2, 3, 4]
     price_change_percentage1 = 0
 
+    X_pred = []
+    Y_pred = []
+    X = []
+    Y = []
+
     for i in range(1, max_iterations):
         price_change_percentage = i
         current_price = base_price - ((price_change_percentage*base_price)/100)
-        predicted_sales_change_percentage = identify_level(df, item_id, store_id, current_demand, year, price_change_percentage)
+        temp_value = identify_level(df, item_id, store_id, current_demand, year, price_change_percentage)
+        predicted_sales_change_percentage = temp_value[0]
+        X_pred = temp_value[1]
+        Y_pred = temp_value[2]
+        X = temp_value[3]
+        Y = temp_value[4]
         predicted_sales = num_weeks * (base_weekly_demand * (1 + predicted_sales_change_percentage / 100))
         if i == 81:
             temp[0] = (current_price - cost_price) * predicted_sales
@@ -101,7 +121,7 @@ def optimise_price(item_id, store_id, target_sales_date, current_date, year):
     print(temp)
     print(best_price, price_change_percentage1, best_profit, best_loss)
     print(base_price, cost_price, base_weekly_demand)
-    return best_price
+    return [best_price, X_pred, Y_pred, X, Y, price_change_percentage1]
 
         
 
@@ -243,21 +263,28 @@ def fit_polynomial_model(df, price_change):
     y_pred = model.predict(X_new_poly)
     #print(y_pred)
 
-    # Plot actual vs predicted sales change
-    # plt.scatter(X, y, color='blue', label='Actual Sales Change')
-    # plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
-    # plt.xlabel('Price Change')
-    # plt.ylabel('Sales Change')
-    # dep = df['dept_id'].unique()
-    # plt.title(f'Price Elasticity for {dep}')
-    # plt.legend()
-    # plt.grid(True)
+    # if price_change == 99:
+    #     # Plot actual vs predicted sales change
+    #     plt.scatter(X, y, color='blue', label='Actual Sales Change')
+    #     plt.plot(X_new, y_pred, color='red', label='Predicted Sales Change')
+    #     plt.xlabel('Price Change')
+    #     plt.ylabel('Sales Change')
+    #     dep = df['dept_id'].unique()
+    #     plt.title(f'Price Elasticity for {dep}')
+    #     plt.legend()
+    #     plt.grid(True)
 
-    # plt.show()
+    #     filename = "website/temp_plot.png"
+
+    #     plt.savefig(filename)
+
+    #     plt.close()
 
     price_change_new = np.array([[price_change]])
     price_change_new_poly = poly_features.transform(price_change_new)
-    return model.predict(price_change_new_poly)
+    return [model.predict(price_change_new_poly), X_new, y_pred, X, y]
+
+
 
 
 

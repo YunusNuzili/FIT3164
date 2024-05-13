@@ -1,6 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing Optimisation and Analysis Team 10</title>
@@ -76,6 +78,7 @@
         <div id="resultSection" style="display: none;">
             <h2>Result</h2>
             <div id="visualization"></div>
+            <canvas id="priceChart"></canvas>
             <p id="suggestion"></p>
         </div>
         
@@ -140,22 +143,50 @@
 
 
         function displayResults(data) {
-            
-            // show result page
-            var resultSection = document.getElementById("resultSection");
-            resultSection.style.display = "block";
-            
-            // show visuallization graph
-            var visualization = document.getElementById("visualization");
-            visualization.innerHTML = "Optimized Price: " + data.optimized_price;
+    var resultSection = document.getElementById("resultSection");
+    resultSection.style.display = "block";
     
-            // generate suggestion
-            var suggestion = "Based on the input given we suggest..." + data.optimized_price;
-            
-            // show suggestion
-            var suggestionElement = document.getElementById("suggestion");
-            suggestionElement.textContent = suggestion;
+    var suggestionElement = document.getElementById("suggestion");
+    suggestionElement.textContent = "Based on the input given we suggest an optimized price of $" + data.optimized_price + " with a " + data.discount + "% discount";
+
+    var ctx = document.getElementById('priceChart').getContext('2d');  // Make sure this ID matches your canvas ID
+    if (window.myChart) {
+        window.myChart.destroy();
+    }
+    window.myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.x_pred,
+            datasets: [{
+                label: 'Predicted Sales Change vs. Price Change',
+                data: data.y_pred,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            },{
+                label: 'Sales Changes',
+                data: data.y_values.map((value, index) => ({ x: data.x_values[index], y: value })),
+                backgroundColor: 'rgba(255, 99, 132, 0.5)', // Change color as needed
+                pointRadius: 10, // Adjust size of points
+                pointHoverRadius: 8, // Adjust hover size of points
+                showLine: false
+            }
+        ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
         }
+    });
+
+    
+}
+
+
+
+
         
     </script>
 </body>
