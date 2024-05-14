@@ -131,3 +131,37 @@ input[type="text"]{
     margin: auto; /* Centers the chart container horizontally */
     background-color: white; /* Optional: Sets a background color */
 }
+
+
+#suggestion {
+    font-size: 2em; /* Adjusts the size of the text */
+    display: flex;      /* Lays out the child elements in a row */
+    justify-content: space-between; /* Distributes space more tightly around elements */
+    align-items: center; /* Aligns items vertically */
+    flex-wrap: wrap;     /* Allows items to wrap on smaller screens */
+    padding: 10px; /* Padding around the entire suggestion area */
+}
+
+.price-detail {
+    margin: 5px 5px; /* Reduced horizontal and vertical spacing */
+    padding: 10px 10px;
+    background-color: #e6e6e6;
+    color: #333;
+    border-radius: 20px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.12);
+}
+
+
+.original-price-detail {
+    margin-top: 30px; /* Increase top margin to create more space below the Result header */
+    display: block;  /* Ensures it starts on a new line */
+    font-size: 1.5em; /* Optionally increase the font size for visibility */
+    padding-left: 10px; /* Add some padding to align it nicely under the header */
+}
+
+
+.price-group {
+    display: flex;
+    gap: 10px; /* Control the space between the grouped items */
+}
+
