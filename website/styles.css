@@ -68,9 +68,17 @@ h2 {
     margin-top: 80px; 
 }
 
+select{
+    font-size: 30px;   
+    height: 50px; 
+    padding: 5px;
+    margin: 10px 0;
+    width: 265px;
+}
+
 p {
     color: #fff; 
-    font-size: 50px; 
+    font-size: 30px; 
 }
 
 label {
@@ -114,11 +122,4 @@ input[type="text"]{
     width: 250px;
     padding: 5px;
     margin: 10px 0;
-}
-
-#priceChart {
-    width: 800px; /* Set width of the chart container */
-    height: 600px; /* Set height of the chart container */
-    margin: auto; /* Centers the chart container horizontally */
-    background-color: white; /* Optional: Sets a background color */
 }

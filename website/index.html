@@ -61,9 +61,20 @@
         <label for="itemId">Item ID:</label>
         <input type="text" id="itemId" name="itemId">
     
-        <!-- Store ID Input -->
+        <!-- Store ID Select -->
         <label for="storeId">Store ID:</label>
-        <input type="text" id="storeId" name="storeId">
+        <select id="storeId" name="storeId">
+            <option value="CA_1">CA_1</option>
+            <option value="CA_2">CA_2</option>
+            <option value="CA_3">CA_3</option>
+            <option value="CA_4">CA_4</option>
+            <option value="TX_1">TX_1</option>
+            <option value="TX_2">TX_2</option>
+            <option value="TX_3">TX_3</option>
+            <option value="WI_1">WI_1</option>
+            <option value="WI_2">WI_2</option>
+            <option value="WI_3">WI_3</option>
+        </select>
 
         <!-- Current Date Input -->
         <label for="currentDate">Current Date:</label>
@@ -72,10 +83,7 @@
         <!-- Target Sales Date Input -->
         <label for="targetSalesDate">Target Sales Date:</label>
         <input type="text" id="targetSalesDate" name="targetSalesDate">
-    
-        <!-- Year Input -->
-        <label for="year">Year:</label>
-        <input type="text" id="year" name="year">
+
     
         <!-- Submit Button -->
         <button onclick="submitForm()">Submit</button>
@@ -122,20 +130,50 @@
             var storeId = document.getElementById("storeId").value;
             var targetSalesDate = document.getElementById("targetSalesDate").value;
             var currentDate = document.getElementById("currentDate").value;
-            var year = document.getElementById("year").value || ""; // Optional year, default to empty string if not provided
+            
             
             // Check if the values are valid
-            if (itemId === "" || storeId === "" || targetSalesDate === "" || itemId < 1 || storeId < 1) {
-                alert("Please enter a valid value for item ID and store ID.");
-                return; // if invalid, stop
+            if (itemId === "" || storeId === "" || targetSalesDate === "" || currentDate === "") {
+                alert("Please enter ");
+                return; // If any input is empty, stop
+            }
+            
+            // Check if the date format and Target date after current date
+            var dateRegex = /^\d{2}\/\d{2}\/\d{4}$/; // dd/mm/yy format
+            if (!dateRegex.test(targetSalesDate) || !dateRegex.test(currentDate)) {
+                alert("format: 'dd/mm/yyyy' ");
+                return; // if invaid stop
+            }
+            
+            var targetSalesDateParts = targetSalesDate.split("/");
+            var currentDateParts = currentDate.split("/");
+            
+            var targetSalesDateObj = new Date(targetSalesDateParts[2], targetSalesDateParts[1] - 1, targetSalesDateParts[0]); // day,month,year value, starting from 0
+            var currentDateObj = new Date(currentDateParts[2], currentDateParts[1] - 1, currentDateParts[0]); // day,month,year value, starting from 0
+            
+            if (currentDateObj >= targetSalesDateObj) {
+                alert("Target Sales Date must after Current Date");
+                return; // if inviaid,stop
             }
 
+            // Check if targetSalesDateObj year is same as currentDateObj year
+            if (currentDateObj.getFullYear() !== targetSalesDateObj.getFullYear()) {
+                alert("Target Sales Date year must be the same as Current Date year.");
+                return; // If invalid, stop
+            }
+
+            // Check itemID
+            var regex = /^[a-zA-Z]+_\d{1}_\d{3}$/;
+            if (regex.test(itemId)) {
+
+            } else {
+                alert("Invalid itemID format. Please enter a valid itemID in the format 'DEPT_X_XXX'.\n DEPT includes [HOBBIES,HOUSEHOLD,FOODS]");
+            }
             var formData = {
                 itemId: itemId,
                 storeId: storeId,
                 targetSalesDate: targetSalesDate,
                 currentDate: currentDate,
-                year: year
             };
 
             // Send an AJAX request to your Flask endpoint
