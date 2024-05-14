@@ -115,3 +115,10 @@ input[type="text"]{
     padding: 5px;
     margin: 10px 0;
 }
+
+#priceChart {
+    width: 800px; /* Set width of the chart container */
+    height: 600px; /* Set height of the chart container */
+    margin: auto; /* Centers the chart container horizontally */
+    background-color: white; /* Optional: Sets a background color */
+}

@@ -8,6 +8,12 @@
     <title>Pricing Optimisation and Analysis Team 10</title>
     <!-- CSS file -->
     <link rel="stylesheet" type="text/css" href="styles.css" media="all">
+    <style>
+        canvas {
+            background-color: white;
+        }
+        
+    </style>
 </head>
 <body onload="showSection('home')">
     <header>
@@ -58,14 +64,14 @@
         <!-- Store ID Input -->
         <label for="storeId">Store ID:</label>
         <input type="text" id="storeId" name="storeId">
+
+        <!-- Current Date Input -->
+        <label for="currentDate">Current Date:</label>
+        <input type="text" id="currentDate" name="currentDate">
     
         <!-- Target Sales Date Input -->
         <label for="targetSalesDate">Target Sales Date:</label>
         <input type="text" id="targetSalesDate" name="targetSalesDate">
-    
-        <!-- Current Date Input -->
-        <label for="currentDate">Current Date:</label>
-        <input type="text" id="currentDate" name="currentDate">
     
         <!-- Year Input -->
         <label for="year">Year:</label>
@@ -84,6 +90,12 @@
         
     </section>
     
+    <div id="resultSection" style="display: none;">
+        <h2>Result</h2>
+        <div id="visualization"></div>
+        <canvas id="priceChart"></canvas>
+        <p id="suggestion"></p>
+    </div>
 
     <footer>
         <p>&copy; Team 10</p>
@@ -173,9 +185,29 @@
         ]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 y: {
-                    beginAtZero: false
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Sales Change(%)', // Label for the y-axis
+                        color: '#111', // optional: changes the color of the label
+                        font: {
+                            size: 16 // optional: changes the size of the label
+                        }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Price Change(%)', // Label for the x-axis
+                        color: '#111', // optional: changes the color of the label
+                        font: {
+                            size: 16 // optional: changes the size of the label
+                        }
+                    }
                 }
             }
         }
