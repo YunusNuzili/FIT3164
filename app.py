@@ -22,10 +22,9 @@ def predict():
         store_id = data['storeId']
         target_sales_date = data['targetSalesDate']
         current_date = data.get('currentDate', '')
-        year = int(data['year'])
 
         # 调用 optimise_price 函数进行价格优化计算
-        prediction = optimise_price(item_id, store_id, target_sales_date, current_date, year)
+        prediction = optimise_price(item_id, store_id, target_sales_date, current_date)
         plot = "/temp_plot.png"
 
         
@@ -41,9 +40,12 @@ def predict():
         x_values = prediction[3].tolist()
         y_values = prediction[4].tolist()
         price_change_percentage = prediction[5]
+        base_price_of_item = prediction[6]
 
 
-        return jsonify({'x_values': x_values, 'y_values': y_values, 'x_pred': x_pred, 'y_pred': y_pred,'optimized_price': optimal_price, "discount": price_change_percentage})
+        return jsonify({'x_values': x_values, 'y_values': y_values, 'x_pred': x_pred, 
+                        'y_pred': y_pred,'optimized_price': optimal_price, 
+                        "discount": price_change_percentage, 'base_price': base_price_of_item})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -52,7 +54,14 @@ def predict():
 #polynomial_model(item_id, store_id, year, target_sales_date, current_date)
    
    
-def optimise_price(item_id, store_id, target_sales_date, current_date, year):
+def optimise_price(item_id, store_id, target_sales_date, current_date):
+
+    date_format = "%d/%m/%Y"
+    date1 = datetime.strptime(current_date, date_format)
+    date2 = datetime.strptime(target_sales_date, date_format)
+
+    year =  date1.year
+
     file_name = f"percentage_changes_decr_price/{year-1}_percentage_changes.csv"
 
     df = pd.read_csv(file_name)
@@ -66,9 +75,7 @@ def optimise_price(item_id, store_id, target_sales_date, current_date, year):
         base_weekly_demand = 1
     
     # Convert date strings to datetime objects
-    date_format = "%d/%m/%Y"
-    date1 = datetime.strptime(current_date, date_format)
-    date2 = datetime.strptime(target_sales_date, date_format)
+    
     
     # Calculate the difference between the dates
     delta = date2 - date1
@@ -126,7 +133,7 @@ def optimise_price(item_id, store_id, target_sales_date, current_date, year):
     print(temp)
     print(best_price, price_change_percentage1, best_profit, best_loss)
     print(base_price, cost_price, base_weekly_demand)
-    return [best_price, X_pred, Y_pred, X, Y, price_change_percentage1]
+    return [best_price, X_pred, Y_pred, X, Y, price_change_percentage1, base_price]
 
         
 
