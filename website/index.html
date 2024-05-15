@@ -198,23 +198,28 @@
     var resultSection = document.getElementById("resultSection");
     resultSection.style.display = "block";
     
-    // Create a container for the original price detail only and insert below the "Result" header
-    var originalPriceDetail = document.createElement('div');
-originalPriceDetail.className = 'original-price-detail';
-originalPriceDetail.innerHTML = 
-    '<span class="price-detail">Original Price: $<span class="price">' + data.base_price + '</span></span>';
-var header = document.querySelector('#resultSection h2');
-header.parentNode.insertBefore(originalPriceDetail, header.nextSibling);
+    // Check if an original price detail container already exists and clear it or create a new one
+    var originalPriceDetail = document.querySelector('.original-price-detail');
+    if (originalPriceDetail) {
+        // If it exists, update the content only
+        originalPriceDetail.innerHTML = '<span class="price-detail">Original Price: $<span class="price">' + data.base_price + '</span></span>';
+    } else {
+        // If it does not exist, create it and insert it below the "Result" header
+        originalPriceDetail = document.createElement('div');
+        originalPriceDetail.className = 'original-price-detail';
+        originalPriceDetail.innerHTML = '<span class="price-detail">Original Price: $<span class="price">' + data.base_price + '</span></span>';
+        var header = document.querySelector('#resultSection h2');
+        header.parentNode.insertBefore(originalPriceDetail, header.nextSibling);
+    }
 
-
-    // Existing code for optimized price and discount rate in the suggestion element
+    // Update the suggestion element with the optimized price and discount rate
     var suggestionElement = document.getElementById("suggestion");
     suggestionElement.innerHTML = 
         '<div class="price-header">Suggested optimal price and discount rate:</div>' +
         '<span class="price-detail">Optimized Price: $<span class="price">' + data.optimized_price + '</span></span>' +
         '<span class="price-detail">Discount Rate: <span class="price">' + data.discount + '%</span></span>';
 
-    // Existing code for visualization and chart
+    // Update visualization and chart
     var ctx = document.getElementById('priceChart').getContext('2d');
     if (window.myChart) {
         window.myChart.destroy();
@@ -266,6 +271,7 @@ header.parentNode.insertBefore(originalPriceDetail, header.nextSibling);
         }
     });
 }
+
 
 
 
