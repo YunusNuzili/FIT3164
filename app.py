@@ -99,8 +99,8 @@ def optimise_price(item_id, store_id, target_sales_date, current_date):
     Y_pred = []
     X = []
     Y = []
-    stock = 100
-    stock += (num_weeks // 10) * 100
+    stock = 500
+    stock += (num_weeks // 10) * 500
 
     for i in range(1, max_iterations):
         price_change_percentage = i
@@ -112,7 +112,7 @@ def optimise_price(item_id, store_id, target_sales_date, current_date):
         X = temp_value[3]
         Y = temp_value[4]
         predicted_sales = num_weeks * (base_weekly_demand * (1 + predicted_sales_change_percentage / 100))
-        if i == 81:
+        if i == 4:
             temp[0] = (current_price - cost_price) * predicted_sales
             temp[1] = predicted_sales
             temp[2] = current_price
@@ -207,10 +207,10 @@ def base_demand(df, item_id, store):
 def identify_level(df, item_id, store, sales, year, price_change):
 
     if not df[df['item_id'] == item_id].empty:
-        if len(df[(df['item_id'] == item_id) & (df['store_id'] == store)]) < 20:
-            if len(df[df['item_id'] == item_id]) < 20:
+        if len(df[(df['item_id'] == item_id) & (df['store_id'] == store)]) < 100:
+            if len(df[df['item_id'] == item_id]) < 100:
                 dept_id = item_id[:-4]
-                if len(df[(df['dept_id'] == dept_id) & (df['store_id'] == store)]) < 20:
+                if len(df[(df['dept_id'] == dept_id) & (df['store_id'] == store)]) < 100:
                     return department_level_model(item_id, store, sales, year-1, df, price_change)
                 else:
                     return department_store_level_model(item_id, store, sales, year-1, df, price_change)
@@ -219,29 +219,33 @@ def identify_level(df, item_id, store, sales, year, price_change):
         else:
             return item_store_level_model(item_id, store, sales, year-1, df, price_change)
     else:
-        return department_store_level_model(item_id, store, sales, year-1, df, price_change)
+        return department_level_model(item_id, store, sales, year-1, df, price_change)
 
 
 def item_level_model(item_id, store, sales, year, df, price_change):
     df = df[df['item_id'] == item_id]
     df['price_change'] = df['price_change'].abs()
+    print("1")
     return fit_polynomial_model(df, price_change)
 
 def item_store_level_model(item_id, store, sales, year, df, price_change):
     df = df[(df['item_id'] == item_id) & (df['store_id'] == store)]
     df['price_change'] = df['price_change'].abs()
+    print("2")
     return fit_polynomial_model(df, price_change)
 
 def department_level_model(item_id, store, sales, year, df, price_change):
     dept_id = item_id[:-4]
     df = df[df['dept_id'] == dept_id]
     df['price_change'] = df['price_change'].abs()
+    print("3")
     return fit_polynomial_model(df, price_change)
 
 def department_store_level_model(item_id, store, sales, year, df, price_change):
     dept_id = item_id[:-4]
     df = df[(df['dept_id'] == dept_id) & (df['store_id'] == store)]
     df['price_change'] = df['price_change'].abs()
+    print("4")
     return fit_polynomial_model(df, price_change)
 
 
