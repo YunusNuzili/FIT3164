@@ -36,7 +36,6 @@ def predict():
         x_pred = [i for i in range(1, 101)]
 
         y_pred = prediction[2].tolist()
-        print(prediction[2].tolist())
         x_values = prediction[3].tolist()
         y_values = prediction[4].tolist()
         price_change_percentage = prediction[5]
@@ -100,6 +99,8 @@ def optimise_price(item_id, store_id, target_sales_date, current_date):
     Y_pred = []
     X = []
     Y = []
+    stock = 100
+    stock += (num_weeks // 10) * 100
 
     for i in range(1, max_iterations):
         price_change_percentage = i
@@ -118,7 +119,14 @@ def optimise_price(item_id, store_id, target_sales_date, current_date):
             temp[3] = predicted_sales_change_percentage
 
         # Calculate profit and check against the best seen so far
-        if predicted_sales < 200:
+        if predicted_sales < 0:
+            profit = 0 - (cost_price * stock)
+            if profit > best_profit:
+                best_profit = profit
+                best_price = current_price
+                price_change_percentage1 = price_change_percentage
+
+        elif predicted_sales <= stock:
             profit = (current_price - cost_price) * predicted_sales  # Ensure we do not exceed stock
             if profit > best_profit:
                 best_profit = profit
