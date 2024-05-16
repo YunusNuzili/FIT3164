@@ -91,8 +91,7 @@ def optimise_price(item_id, store_id, target_sales_date, current_date):
 
     current_price = base_price
     current_demand = base_weekly_demand
-    best_profit = 0
-    best_loss = float("-inf")
+    best_profit = float("-inf")
     best_price = base_price
     temp = [1, 2, 3, 4]
     price_change_percentage1 = 0
@@ -121,17 +120,13 @@ def optimise_price(item_id, store_id, target_sales_date, current_date):
         # Calculate profit and check against the best seen so far
         if predicted_sales < 200:
             profit = (current_price - cost_price) * predicted_sales  # Ensure we do not exceed stock
-            if (profit <  0) and (profit > best_loss):
-                best_loss = profit
-                best_price = current_price
-                price_change_percentage1 = price_change_percentage
-            elif profit > best_profit:
+            if profit > best_profit:
                 best_profit = profit
                 best_price = current_price
                 price_change_percentage1 = price_change_percentage
     
     print(temp)
-    print(best_price, price_change_percentage1, best_profit, best_loss)
+    print(best_price, price_change_percentage1, best_profit)
     print(base_price, cost_price, base_weekly_demand)
     return [best_price, X_pred, Y_pred, X, Y, price_change_percentage1, base_price]
 
