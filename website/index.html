@@ -61,9 +61,20 @@
         <label for="itemId">Item ID:</label>
         <input type="text" id="itemId" name="itemId">
     
-        <!-- Store ID Input -->
+        <!-- Store ID Select -->
         <label for="storeId">Store ID:</label>
-        <input type="text" id="storeId" name="storeId">
+        <select id="storeId" name="storeId">
+            <option value="CA_1">CA_1</option>
+            <option value="CA_2">CA_2</option>
+            <option value="CA_3">CA_3</option>
+            <option value="CA_4">CA_4</option>
+            <option value="TX_1">TX_1</option>
+            <option value="TX_2">TX_2</option>
+            <option value="TX_3">TX_3</option>
+            <option value="WI_1">WI_1</option>
+            <option value="WI_2">WI_2</option>
+            <option value="WI_3">WI_3</option>
+        </select>
 
         <!-- Current Date Input -->
         <label for="currentDate">Current Date:</label>
@@ -72,10 +83,7 @@
         <!-- Target Sales Date Input -->
         <label for="targetSalesDate">Target Sales Date:</label>
         <input type="text" id="targetSalesDate" name="targetSalesDate">
-    
-        <!-- Year Input -->
-        <label for="year">Year:</label>
-        <input type="text" id="year" name="year">
+
     
         <!-- Submit Button -->
         <button onclick="submitForm()">Submit</button>
@@ -87,6 +95,8 @@
             <canvas id="priceChart"></canvas>
             <p id="suggestion"></p>
         </div>
+
+        
         
     </section>
     
@@ -122,20 +132,50 @@
             var storeId = document.getElementById("storeId").value;
             var targetSalesDate = document.getElementById("targetSalesDate").value;
             var currentDate = document.getElementById("currentDate").value;
-            var year = document.getElementById("year").value || ""; // Optional year, default to empty string if not provided
+            
             
             // Check if the values are valid
-            if (itemId === "" || storeId === "" || targetSalesDate === "" || itemId < 1 || storeId < 1) {
-                alert("Please enter a valid value for item ID and store ID.");
-                return; // if invalid, stop
+            if (itemId === "" || storeId === "" || targetSalesDate === "" || currentDate === "") {
+                alert("Please enter ");
+                return; // If any input is empty, stop
+            }
+            
+            // Check if the date format and Target date after current date
+            var dateRegex = /^\d{2}\/\d{2}\/\d{4}$/; // dd/mm/yy format
+            if (!dateRegex.test(targetSalesDate) || !dateRegex.test(currentDate)) {
+                alert("format: 'dd/mm/yyyy' ");
+                return; // if invaid stop
+            }
+            
+            var targetSalesDateParts = targetSalesDate.split("/");
+            var currentDateParts = currentDate.split("/");
+            
+            var targetSalesDateObj = new Date(targetSalesDateParts[2], targetSalesDateParts[1] - 1, targetSalesDateParts[0]); // day,month,year value, starting from 0
+            var currentDateObj = new Date(currentDateParts[2], currentDateParts[1] - 1, currentDateParts[0]); // day,month,year value, starting from 0
+            
+            if (currentDateObj >= targetSalesDateObj) {
+                alert("Target Sales Date must after Current Date");
+                return; // if inviaid,stop
             }
 
+            // Check if targetSalesDateObj year is same as currentDateObj year
+            if (currentDateObj.getFullYear() !== targetSalesDateObj.getFullYear()) {
+                alert("Target Sales Date year must be the same as Current Date year.");
+                return; // If invalid, stop
+            }
+
+            // Check itemID
+            var regex = /^[a-zA-Z]+_\d{1}_\d{3}$/;
+            if (regex.test(itemId)) {
+
+            } else {
+                alert("Invalid itemID format. Please enter a valid itemID in the format 'DEPT_X_XXX'.\n DEPT includes [HOBBIES,HOUSEHOLD,FOODS]");
+            }
             var formData = {
                 itemId: itemId,
                 storeId: storeId,
                 targetSalesDate: targetSalesDate,
                 currentDate: currentDate,
-                year: year
             };
 
             // Send an AJAX request to your Flask endpoint
@@ -158,10 +198,29 @@
     var resultSection = document.getElementById("resultSection");
     resultSection.style.display = "block";
     
-    var suggestionElement = document.getElementById("suggestion");
-    suggestionElement.textContent = "Based on the input given we suggest an optimized price of $" + data.optimized_price + " with a " + data.discount + "% discount";
+    // Check if an original price detail container already exists and clear it or create a new one
+    var originalPriceDetail = document.querySelector('.original-price-detail');
+    if (originalPriceDetail) {
+        // If it exists, update the content only
+        originalPriceDetail.innerHTML = '<span class="price-detail">Original Price: $<span class="price">' + data.base_price + '</span></span>';
+    } else {
+        // If it does not exist, create it and insert it below the "Result" header
+        originalPriceDetail = document.createElement('div');
+        originalPriceDetail.className = 'original-price-detail';
+        originalPriceDetail.innerHTML = '<span class="price-detail">Original Price: $<span class="price">' + data.base_price + '</span></span>';
+        var header = document.querySelector('#resultSection h2');
+        header.parentNode.insertBefore(originalPriceDetail, header.nextSibling);
+    }
 
-    var ctx = document.getElementById('priceChart').getContext('2d');  // Make sure this ID matches your canvas ID
+    // Update the suggestion element with the optimized price and discount rate
+    var suggestionElement = document.getElementById("suggestion");
+    suggestionElement.innerHTML = 
+        '<div class="price-header">Suggested optimal price and discount rate:</div>' +
+        '<span class="price-detail">Optimized Price: $<span class="price">' + data.optimized_price + '</span></span>' +
+        '<span class="price-detail">Discount Rate: <span class="price">' + data.discount + '%</span></span>';
+
+    // Update visualization and chart
+    var ctx = document.getElementById('priceChart').getContext('2d');
     if (window.myChart) {
         window.myChart.destroy();
     }
@@ -177,12 +236,11 @@
             },{
                 label: 'Sales Changes',
                 data: data.y_values.map((value, index) => ({ x: data.x_values[index], y: value })),
-                backgroundColor: 'rgba(255, 99, 132, 0.5)', // Change color as needed
-                pointRadius: 10, // Adjust size of points
-                pointHoverRadius: 8, // Adjust hover size of points
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                pointRadius: 10,
+                pointHoverRadius: 8,
                 showLine: false
-            }
-        ]
+            }]
         },
         options: {
             responsive: true,
@@ -192,29 +250,28 @@
                     beginAtZero: false,
                     title: {
                         display: true,
-                        text: 'Sales Change(%)', // Label for the y-axis
-                        color: '#111', // optional: changes the color of the label
+                        text: 'Sales Change(%)',
+                        color: '#111',
                         font: {
-                            size: 16 // optional: changes the size of the label
+                            size: 16
                         }
                     }
                 },
                 x: {
                     title: {
                         display: true,
-                        text: 'Price Change(%)', // Label for the x-axis
-                        color: '#111', // optional: changes the color of the label
+                        text: 'Price Change(%)',
+                        color: '#111',
                         font: {
-                            size: 16 // optional: changes the size of the label
+                            size: 16
                         }
                     }
                 }
             }
         }
     });
-
-    
 }
+
 
 
 
