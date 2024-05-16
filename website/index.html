@@ -29,19 +29,32 @@
     </header>
 
     <section id="home">
-        <h2>Quickly and automatically adjust pricing for retail items</h2>
-        <p>This web application is a price optimization system that can use historical sales data, product attributes and 
-            pricing information to determine the optimal pricing point and identify the relationship between price and sales 
-            demand. This will help retail businesses gain a competitive advantage and increase sales efficiency to make better 
-            decisions for higher profits</p>
+        <h2>Click on GET STARTED to use the price optimisation tool</h2>
         <button class="button" onclick="showSection('services')">GET STARTED</button>
     </section>
 
     <section id="about" style="display: none;">
         <h2>About Us</h2>
-        <p>We are team 10, below is all the members for our team.
+    <p>This web application is a sophisticated price optimization system that leverages historical sales data, product attributes, and market trends to determine the most profitable pricing strategies for retail items.</p>
+    <h3>Understanding Price Elasticity: Maximizing Profits with Data</h3>
+    <p>Central to our approach is the economic principle of price elasticity of demand, a crucial metric that quantifies how sensitive the quantity demanded of a product is to changes in its price.</p>
+    <p>Price elasticity of demand is a concept from economics that measures the responsiveness, or elasticity, of the quantity demanded of a product in response to a price change. It is calculated as the percentage change in quantity demanded in response to a one percent change in price. For instance, a product with a high price elasticity is significantly affected by price changes, meaning consumers will buy much more or less of it in response to price fluctuations. Conversely, a product with low price elasticity is relatively insensitive to price changes, typically because it is a necessity or lacks adequate substitutes.</p>
+    <h3>The Power of Data-Driven Pricing Strategies</h3>
+    <p>Understanding and applying price elasticity effectively allows businesses to set prices that not only maximize profits but also enhance customer satisfaction and market share. When a product is priced optimally, taking into account its elasticity, businesses can strategically adjust prices to respond to market changes, competitor actions, and evolving consumer preferences without sacrificing sales volume or revenue.</p>
+    <h3>Our Advanced Pricing Optimization System</h3>
+    <p>Our system employs advanced analytical techniques and machine learning algorithms to model and forecast the impacts of different pricing strategies. By inputting data such as past sales, competitor pricing, and cost information, our tool predicts how adjustments in prices will affect sales volume, enabling retailers to find the price point that maximizes their profitability.</p>
+    <p>This tool is particularly useful in highly competitive retail environments where pricing can be the difference between market leadership and obsolescence.</p>
+    <h3>Accessible Insights for Every Retailer</h3>
+    <p>Moreover, our application is designed to be user-friendly, allowing non-experts to benefit from cutting-edge economic and statistical analysis. Whether you are a small boutique or a large retailer, our tool provides valuable insights that empower you to make informed pricing decisions quickly and efficiently.</p>
+    <h3>Transform Your Business with Data-Driven Decisions</h3>
+    <p>In summary, by integrating the concept of price elasticity into our pricing optimization tool, we offer a powerful solution that supports dynamic pricing strategies, helps to understand consumer behavior in depth, and drives business success through data-driven decisions. Start optimizing your pricing strategy today and see how leveraging the right data can transform your business.</p>
+
+    </section>
+
+    <section id="contact">
+        <p>We are team 10, contact Mohamed Yunus Nuzili for inquiries.
             <br>Yongkang Liu 30761840
-            <br>Mohamed Yunus Nuzili 32795947 
+            <br>Mohamed Yunus Nuzili 32795947 (mnuz0001@student.monash.edu)
             <br>Brandon Yap 30884977
             <br>Yinghua Sun 28981510
         </p>      
@@ -243,6 +256,15 @@
             }]
         },
         options: {
+            plugins: {
+            title: {
+                display: true,
+                text: 'Price Elasticity for the Item',
+                font: {
+                            size: 24
+                        }
+            }
+        },
             responsive: true,
             maintainAspectRatio: true,
             scales: {
